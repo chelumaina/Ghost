@@ -6,7 +6,7 @@ x-service-template: &service-template
     - .:/home/ghost
     # - ${SSH_AUTH_SOCK}:/ssh-agent
     # - ${HOME}/.gitconfig:/root/.gitconfig:ro
-    - ./themes:/home/ghost/ghost/core/content/themes
+    - ./custom_themes:/home/ghost/ghost/core/content/themes
     # - ./ghost/core/content/themes:/home/ghost/current/content/themes
     - node_modules_ghost_root:/home/ghost/node_modules:delegated
     - node_modules_ghost_admin:/home/ghost/ghost/admin/node_modules:delegated
