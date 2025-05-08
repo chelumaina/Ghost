@@ -157,7 +157,7 @@ services:
     restart: always
     volumes:
       # - ./.docker/mysql-preload:/docker-entrypoint-initdb.d
-      - ./mysql/data:/var/lib/mysql
+      # - ./mysql/data:/var/lib/mysql
       - ./mysql/conf.d:/etc/mysql/conf.d
     healthcheck:
       test: mysql -u${DB_USER} -p${DB_PASSWORD} ghost -e 'select 1'
