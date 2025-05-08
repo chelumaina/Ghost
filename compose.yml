@@ -148,7 +148,6 @@ services:
       MYSQL_ROOT_HOST: '%'
       MYSQL_SECURE_CONNECTION: 'ON'
     command:
-      --initialize-insecure
       --innodb-buffer-pool-size=1G
       --innodb-log-buffer-size=500M
       --innodb-change-buffer-max-size=50
@@ -157,7 +156,6 @@ services:
       --character-set-server=utf8mb4
       --collation-server=utf8mb4_unicode_ci
       --explicit_defaults_for_timestamp=1
-      --secure-file-priv=/var/lib/mysql
       --local-infile=0
     restart: always
     volumes:
