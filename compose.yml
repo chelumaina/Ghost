@@ -153,10 +153,14 @@ services:
       --innodb-change-buffer-max-size=50
       --innodb-flush-log-at-trx_commit=0
       --innodb-flush-method=O_DIRECT
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --explicit_defaults_for_timestamp=1
+      --local-infile=0
     restart: always
     volumes:
       # - ./.docker/mysql-preload:/docker-entrypoint-initdb.d
-      # - ./mysql/data:/var/lib/mysql
+      - ./mysql/data:/var/lib/mysql
       - ./mysql/conf.d:/etc/mysql/conf.d
     healthcheck:
       test: mysql -u${DB_USER} -p${DB_PASSWORD} ghost -e 'select 1'
