@@ -114,7 +114,7 @@ services:
     container_name: ghost-tinybird
     hostname: ghost-tinybird
     working_dir: /home/ghost/ghost/web-analytics
-    profiles: [ tinybird ]
+    # profiles: [ tinybird ]
     tty: true
     networks:
       - app-network
@@ -128,7 +128,7 @@ services:
     container_name: ghost-browser-tests
     hostname: ghost-browser-tests
     command: [ "yarn", "test:browser" ]
-    profiles: [ browser-tests ]
+    # profiles: [ browser-tests ]
     tty: true
     networks:
       - app-network
@@ -201,7 +201,7 @@ services:
     volumes:
       - ./.docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
   grafana:
-    profiles: [ monitoring ]
+    # profiles: [ monitoring ]
     image: grafana/grafana:8.5.27
     container_name: ghost-grafana
     hostname: ghost-grafana
@@ -216,7 +216,7 @@ services:
       - ./.docker/grafana/dashboard.yml:/etc/grafana/provisioning/dashboards/main.yaml
       - ./.docker/grafana/dashboards:/var/lib/grafana/dashboards
   pushgateway:
-    profiles: [ monitoring ]
+    # profiles: [ monitoring ]
     image: prom/pushgateway:v1.11.1
     container_name: ghost-pushgateway
     hostname: ghost-pushgateway
@@ -229,7 +229,7 @@ services:
     image: mailhog/mailhog:latest
     container_name: ghost-mailhog
     hostname: ghost-mailhog
-    profiles: [ ghost_app ]
+    profiles: [ ghost ]
     ports:
       - "1025:1025" # SMTP server
       - "8025:8025" # Web interface
