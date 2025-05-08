@@ -53,12 +53,13 @@ services:
     build:
       context: .
       dockerfile: ./.docker/Dockerfile
-      target: development
+      target: production
 
     env_file:
       - .env
     environment:
-      NODE_ENV: ${NODE_ENV:-development}
+      NODE_ENV: ${NODE_ENV:-production}
+      NODE_TLS_REJECT_UNAUTHORIZED: 0
       url: ${url:-http://localhost:2369}
       database__client: ${database__client:-mysql}
       database__connection__host: ${database__connection__host:-mysql}
