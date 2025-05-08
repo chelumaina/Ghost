@@ -69,7 +69,7 @@ services:
       mail__transport: ${mail__transport-:SMTP}
       mail__options__host: ${mail__options__host:-smtp.your-email.com}
       mail__options__port: ${mail__options__port:-587}
-      mail__options__auth__user: ${mail__options__auth__user:}
+      mail__options__auth__user: ${mail__options__auth__user:-}
       mail__options__auth__pass: ${mail__options__auth__pass:-}
       DEBUG: ${DEBUG:-false}
       SSH_AUTH_SOCK: /ssh-agent
