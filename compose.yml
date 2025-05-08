@@ -58,19 +58,19 @@ services:
     env_file:
       - .env
     environment:
-      NODE_ENV: ${NODE_ENV:-production}
+      NODE_ENV: ${NODE_ENV:-}
       NODE_TLS_REJECT_UNAUTHORIZED: 0
-      url: ${url:-http://localhost:2369}
-      database__client: ${database__client:-mysql}
-      database__connection__host: ${database__connection__host:-mysql}
-      database__connection__user: ${database__connection__user:-root}
-      database__connection__password: ${database__connection__password:-Kenya*4356*}
-      database__connection__database: ${database__connection__database:-ghost}
+      url: ${url:-}
+      database__client: ${database__client:-}
+      database__connection__host: ${database__connection__host:-}
+      database__connection__user: ${database__connection__user:-}
+      database__connection__password: ${database__connection__password:-}
+      database__connection__database: ${database__connection__database:-}
       mail__transport: ${mail__transport-:SMTP}
       mail__options__host: ${mail__options__host:-smtp.your-email.com}
       mail__options__port: ${mail__options__port:-587}
-      mail__options__auth__user: ${mail__options__auth__user:-your-email@example.com}
-      mail__options__auth__pass: ${mail__options__auth__pass:-your-email-password}
+      mail__options__auth__user: ${mail__options__auth__user:}
+      mail__options__auth__pass: ${mail__options__auth__pass:-}
       DEBUG: ${DEBUG:-false}
       SSH_AUTH_SOCK: /ssh-agent
       NX_DAEMON: ${NX_DAEMON:-true}
