@@ -4,7 +4,7 @@ name: ghost
 x-service-template: &service-template
   volumes:
     - .:/home/ghost
-    - ${SSH_AUTH_SOCK}:/ssh-agent
+    # - ${SSH_AUTH_SOCK}:/ssh-agent
     - ${HOME}/.gitconfig:/root/.gitconfig:ro
     - node_modules_ghost_root:/home/ghost/node_modules:delegated
     - node_modules_ghost_admin:/home/ghost/ghost/admin/node_modules:delegated
@@ -36,7 +36,7 @@ x-service-template: &service-template
     - node_modules_apps_stats:/home/ghost/apps/stats/node_modules:delegated
   environment:
     - DEBUG=${DEBUG:-}
-    - SSH_AUTH_SOCK=/ssh-agent
+    # - SSH_AUTH_SOCK=/ssh-agent
     - NX_DAEMON=${NX_DAEMON:-true}
     - GHOST_DEV_IS_DOCKER=true
     - GHOST_DEV_APP_FLAGS=${GHOST_DEV_APP_FLAGS:-}
