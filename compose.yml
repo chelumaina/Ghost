@@ -84,8 +84,8 @@ services:
     hostname: ghost
     # entrypoint: [ "/home/ghost/.docker/development.entrypoint.sh" ]
     command: [ "yarn", "build" ]
-    ports:
-      # - "2368:2368" # Ghost
+    # ports:
+    #    - "2368:2368" # Ghost
     #   - "4200:4200" # Admin
     #   - "4201:4201" # Admin tests
     #   - "4175:4175" # Portal
