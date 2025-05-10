@@ -84,18 +84,20 @@ services:
     hostname: ghost
     entrypoint: [ "/home/ghost/.docker/development.entrypoint.sh" ]
     command: [ "yarn", "dev" ]
-    ports:
-      - "2368:2368" # Ghost
-      - "4200:4200" # Admin
-      - "4201:4201" # Admin tests
-      - "4175:4175" # Portal
-      - "4176:4176" # Portal HTTPS
-      - "4177:4177" # Announcement bar
-      - "4178:4178" # Search
-      - "6174:6174" # Signup form
-      - "7173:7173" # Comments
-      - "7174:7174" # Comments HTTPS
-    # profiles: [ ghost ]
+    # ports:
+    #   - "2368:2368" # Ghost
+    #   - "4200:4200" # Admin
+    #   - "4201:4201" # Admin tests
+    #   - "4175:4175" # Portal
+    #   - "4176:4176" # Portal HTTPS
+    #   - "4177:4177" # Announcement bar
+    #   - "4178:4178" # Search
+    #   - "6174:6174" # Signup form
+    #   - "7173:7173" # Comments
+    #   - "7174:7174" # Comments HTTPS
+    # # profiles: [ ghost ]
+    expose:
+      - 2368
     tty: true
     depends_on:
       mysql:
@@ -138,8 +140,8 @@ services:
     container_name: ghost-mysql
     hostname: ghost-mysql
     # command: --innodb-buffer-pool-size=1G --innodb-log-buffer-size=500M --innodb-change-buffer-max-size=50 --innodb-flush-log-at-trx_commit=0 --innodb-flush-method=O_DIRECT
-    ports:
-      - 3306:3306
+    # ports:
+    #   - 3306:3306
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}  # Set in .env file
       MYSQL_DATABASE: ${DB_NAME}
@@ -193,20 +195,26 @@ services:
     image: prom/prometheus:v2.55.1
     container_name: ghost-prometheus
     hostname: ghost-prometheus
-    ports:
-      - 9090:9090
+    # ports:
+    #   - 9090:9090
+    expose:
+      - 9090
     restart: always
     networks:
       - app-network
     volumes:
       - ./.docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
   grafana:
-    # profiles: [ monitoring ]
+    profiles: [ monitoring ]
     image: grafana/grafana:8.5.27
     container_name: ghost-grafana
     hostname: ghost-grafana
-    ports:
-      - 3000:3000
+    # ports:
+    #   - 3000:3000
+    expose:
+      - 3000
+    networks:
+      - app-network
     restart: always
     environment:
       - GF_AUTH_ANONYMOUS_ENABLED=true
@@ -220,48 +228,50 @@ services:
     image: prom/pushgateway:v1.11.1
     container_name: ghost-pushgateway
     hostname: ghost-pushgateway
-    ports:
-      - 9091:9091
-    networks:
-      - app-network
-
-  mailhog:
-    image: mailhog/mailhog:latest
-    container_name: ghost-mailhog
-    hostname: ghost-mailhog
-    profiles: [ ghost ]
-    ports:
-      - "1025:1025" # SMTP server
-      - "8025:8025" # Web interface
-    restart: always
-    networks:
-      - app-network
-
-  proxy:
-    image: nginx:latest
-    container_name: proxy-ghost
-    hostname: proxy-ghost
-    ports:
-      - "2369:80"   # Expose port 80 for HTTP
-      # - "443:443" # Expose port 443 for HTTPS
-    networks:
-      - app-network
+    # ports:
+    #   - 9091:9091
     expose:
-      - 80
-      - 443
-    volumes:
-      # - ./conf/nginx.conf:/etc/nginx/nginx.conf:ro  # Mount custom Nginx config
-      - ./.docker/nginx/conf:/etc/nginx
-      - ./.docker/nginx/conf/logs:/var/log/nginx
-      - ./.docker/certbot/conf:/etc/letsencrypt
-      - ./.docker/certbot/www:/var/www/certbot
-    restart: always
-    extra_hosts:
-      - "google.com:142.250.190.78"
-    links:
-      - ghost
-    depends_on:
-      - ghost
+      - 9091
+    networks:
+      - app-network
+
+  # mailhog:
+  #   image: mailhog/mailhog:latest
+  #   container_name: ghost-mailhog
+  #   hostname: ghost-mailhog
+  #   profiles: [ ghost ]
+  #   ports:
+  #     - "1025:1025" # SMTP server
+  #     - "8025:8025" # Web interface
+  #   restart: always
+  #   networks:
+  #     - app-network
+
+  # proxy:
+  #   image: nginx:latest
+  #   container_name: proxy-ghost
+  #   hostname: proxy-ghost
+  #   ports:
+  #     - "2369:80"   # Expose port 80 for HTTP
+  #     # - "443:443" # Expose port 443 for HTTPS
+  #   networks:
+  #     - app-network
+  #   expose:
+  #     - 80
+  #     - 443
+  #   volumes:
+  #     # - ./conf/nginx.conf:/etc/nginx/nginx.conf:ro  # Mount custom Nginx config
+  #     - ./.docker/nginx/conf:/etc/nginx
+  #     - ./.docker/nginx/conf/logs:/var/log/nginx
+  #     - ./.docker/certbot/conf:/etc/letsencrypt
+  #     - ./.docker/certbot/www:/var/www/certbot
+  #   restart: always
+  #   extra_hosts:
+  #     - "google.com:142.250.190.78"
+  #   links:
+  #     - ghost
+  #   depends_on:
+  #     - ghost
 
   certbot:
     container_name: certbot-ghost
