@@ -82,10 +82,10 @@ services:
       STRIPE_ACCOUNT_ID: ${STRIPE_ACCOUNT_ID:-}
     container_name: ghost
     hostname: ghost
-    entrypoint: [ "/home/ghost/.docker/development.entrypoint.sh" ]
-    command: [ "yarn", "dev" ]
+    # entrypoint: [ "/home/ghost/.docker/development.entrypoint.sh" ]
+    command: [ "yarn", "build" ]
     ports:
-      - "2368:2368" # Ghost
+      # - "2368:2368" # Ghost
     #   - "4200:4200" # Admin
     #   - "4201:4201" # Admin tests
     #   - "4175:4175" # Portal
