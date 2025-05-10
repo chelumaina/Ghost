@@ -273,21 +273,21 @@ services:
   #   depends_on:
   #     - ghost
 
-  certbot:
-    container_name: certbot-ghost
-    hostname: certbot-ghost
-    image: certbot/certbot
-    volumes:
-      - ./.docker/certbot/conf:/etc/letsencrypt
-      - ./.docker/certbot/www:/var/www/certbot
-    #- ./logs:/var/log/certbot_app
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 48h & wait $${!}; done;'"
-    depends_on:
-      - proxy
-    networks:
-      - app-network
-    extra_hosts:
-      - "google.com:142.250.190.78"
+  # certbot:
+  #   container_name: certbot-ghost
+  #   hostname: certbot-ghost
+  #   image: certbot/certbot
+  #   volumes:
+  #     - ./.docker/certbot/conf:/etc/letsencrypt
+  #     - ./.docker/certbot/www:/var/www/certbot
+  #   #- ./logs:/var/log/certbot_app
+  #   entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 48h & wait $${!}; done;'"
+  #   depends_on:
+  #     - proxy
+  #   networks:
+  #     - app-network
+  #   extra_hosts:
+  #     - "google.com:142.250.190.78"
 
 networks:
   app-network:
