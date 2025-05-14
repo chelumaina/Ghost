@@ -38,29 +38,29 @@ x-service-template: &service-template
     - STRIPE_ACCOUNT_ID=${STRIPE_ACCOUNT_ID:-}
 
 
-    - url=http://localhost:2368
-    - database__client=mysql
-    - database__connection__host=mysql
-    - database__connection__user=root
-    - database__connection__password=root
-    - database__connection__database=ghost
+    - url=${url:-}
+    - database__client=${database__client:-}
+    - database__connection__host=${database__connection__host:-}
+    - database__connection__user=${database__connection__user:-}
+    - database__connection__password=${database__connection__password:-}
+    - database__connection__database=${database__connection__database:-}
     - NODE_ENV=production
 
 
     # Email config (example: Mailgun)
     - mail__transport=SMTP
-    - mail__options__host=smtp.hostinger.com
-    - mail__options__port=465
+    - mail__options__host=${url:-}
+    - mail__options__port=${url:-}
     - mail__options__secure=true
     - mail__options__service=Direct
-    - mail__options__auth__user=support@aispeechpro.com
-    - mail__options__auth__pass=Chelule@2022
+    - mail__options__auth__user=${mail__options__auth__user:-}
+    - mail__options__auth__pass=${mail__options__auth__pass:-}
 
  # Redis cache config
     - cache__type=redis
-    - cache__options__host=redis
-    - cache__options__port=6379
-    - cache__options__password=""  # Add if your Redis instance is protected
+    - cache__options__host=${cache__options__host:-}
+    - cache__options__port=${cache__options__port:-}
+    - cache__options__password=${cache__options__password:-} # Add if your Redis instance is protected
 
 services:
   ghost:
@@ -99,33 +99,40 @@ services:
     command: --innodb-buffer-pool-size=1G --innodb-log-buffer-size=500M --innodb-change-buffer-max-size=50 --innodb-flush-log-at-trx_commit=0 --innodb-flush-method=O_DIRECT
     ports:
       - 3306:3306
+    env_file:
+      -.env
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: ghost
+      MYSQL_ROOT_PASSWORD: ${database__connection__password-}
+      MYSQL_DATABASE: ${database__connection__database-}
     restart: always
     volumes:
       - ./.docker/mysql-preload:/docker-entrypoint-initdb.d
       - ./mysql/mysql-data:/var/lib/mysql
     healthcheck:
-      test: mysql -uroot -proot ghost -e 'select 1'
+      test: mysql -uroot -p${database__connection__password-wrong} ${database__connection__database-gh} -e 'select 1'
       interval: 1s
       retries: 120
+
+
+
   redis:
     image: redis:7.0
     container_name: ghost-redis
     hostname: ghost-redis
+    env_file:
+      -.env
     ports:
       - 6379:6379
     restart: always
     command: [
       "redis-server",
-      "--requirepass", "s93s1nDwSOdlOna", 
+      "--requirepass", "${cache__options__password-}", 
       "--masteruser", "scriber", 
-      "--masterauth", "s93s1nDwSOdlOna" 
+      "--masterauth", "${cache__options__password-}" 
     ]
     environment:
       - REDIS_USER="scriber"
-      - REDIS_PASSWORD="s93s1nDwSOdlOna"
+      - REDIS_PASSWORD="${cache__options__password-}"
     volumes:
       - ./redis/redis-data:/data
       - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
@@ -138,6 +145,8 @@ services:
         - ping
       interval: 1s
       retries: 120
+
+
   prometheus:
     profiles: [ monitoring ]
     image: prom/prometheus:v2.55.1
