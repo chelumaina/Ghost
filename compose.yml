@@ -4,8 +4,8 @@ name: ghost
 x-service-template: &service-template
   volumes:
     - .:/home/ghost
-    - ${SSH_AUTH_SOCK}:/ssh-agent
-    - ${HOME}/.gitconfig:/root/.gitconfig:ro
+    # - ${SSH_AUTH_SOCK}:/ssh-agent
+    # - ${HOME}/.gitconfig:/root/.gitconfig:ro
     - node_modules_ghost_root:/home/ghost/node_modules:delegated
     - node_modules_ghost_admin:/home/ghost/ghost/admin/node_modules:delegated
     - node_modules_ghost_core:/home/ghost/ghost/core/node_modules:delegated
@@ -28,7 +28,7 @@ x-service-template: &service-template
     - node_modules_apps_stats:/home/ghost/apps/stats/node_modules:delegated
   environment:
     - DEBUG=${DEBUG:-}
-    - SSH_AUTH_SOCK=/ssh-agent
+    # - SSH_AUTH_SOCK=/ssh-agent
     - NX_DAEMON=${NX_DAEMON:-true}
     - GHOST_DEV_IS_DOCKER=true
     - GHOST_DEV_APP_FLAGS=${GHOST_DEV_APP_FLAGS:-}
@@ -37,13 +37,38 @@ x-service-template: &service-template
     - STRIPE_PUBLISHABLE_KEY=${STRIPE_PUBLISHABLE_KEY:-}
     - STRIPE_ACCOUNT_ID=${STRIPE_ACCOUNT_ID:-}
 
+
+    - url=http://localhost:2368
+    - database__client=mysql
+    - database__connection__host=mysql
+    - database__connection__user=root
+    - database__connection__password=root
+    - database__connection__database=ghost
+    - NODE_ENV=production
+
+
+    # Email config (example: Mailgun)
+    - mail__transport=SMTP
+    - mail__options__host=smtp.hostinger.com
+    - mail__options__port=465
+    - mail__options__secure=true
+    - mail__options__service=Direct
+    - mail__options__auth__user=support@aispeechpro.com
+    - mail__options__auth__pass=Chelule@2022
+
+ # Redis cache config
+    - cache__type=redis
+    - cache__options__host=redis
+    - cache__options__port=6379
+    - cache__options__password=""  # Add if your Redis instance is protected
+
 services:
   ghost:
     <<: *service-template
     build:
       context: .
       dockerfile: ./.docker/Dockerfile
-      target: development
+      target: production
     entrypoint: [ "/home/ghost/.docker/development.entrypoint.sh" ]
     command: [ "yarn", "dev" ]
     ports:
@@ -68,6 +93,7 @@ services:
   mysql:
     image: mysql:8.4.5
     container_name: ghost-mysql
+    hostname: ghost-mysql
     command: --innodb-buffer-pool-size=1G --innodb-log-buffer-size=500M --innodb-change-buffer-max-size=50 --innodb-flush-log-at-trx_commit=0 --innodb-flush-method=O_DIRECT
     ports:
       - 3306:3306
@@ -77,7 +103,7 @@ services:
     restart: always
     volumes:
       - ./.docker/mysql-preload:/docker-entrypoint-initdb.d
-      - mysql-data:/var/lib/mysql
+      - ./mysql/mysql-data:/var/lib/mysql
     healthcheck:
       test: mysql -uroot -proot ghost -e 'select 1'
       interval: 1s
@@ -85,11 +111,22 @@ services:
   redis:
     image: redis:7.0
     container_name: ghost-redis
+    hostname: ghost-redis
     ports:
       - 6379:6379
     restart: always
+    command: [
+      "redis-server",
+      "--requirepass", "s93s1nDwSOdlOna", 
+      "--masteruser", "scriber", 
+      "--masterauth", "s93s1nDwSOdlOna" 
+    ]
+    environment:
+      - REDIS_USER="scriber"
+      - REDIS_PASSWORD="s93s1nDwSOdlOna"
     volumes:
-      - redis-data:/data
+      - ./redis/redis-data:/data
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
     healthcheck:
       test:
         - CMD
@@ -103,6 +140,7 @@ services:
     profiles: [ monitoring ]
     image: prom/prometheus:v2.55.1
     container_name: ghost-prometheus
+    hostname: ghost-prometheus
     ports:
       - 9090:9090
     restart: always
@@ -112,6 +150,7 @@ services:
     profiles: [ monitoring ]
     image: grafana/grafana:8.5.27
     container_name: ghost-grafana
+    hostname: ghost-grafana
     ports:
       - 3000:3000
     restart: always
@@ -128,14 +167,14 @@ services:
     container_name: ghost-pushgateway
     ports:
       - 9091:9091
-  mailhog:
-    image: mailhog/mailhog:latest
-    container_name: ghost-mailhog
-    profiles: [ ghost ]
-    ports:
-      - "1025:1025" # SMTP server
-      - "8025:8025" # Web interface
-    restart: always
+  # mailhog:
+  #   image: mailhog/mailhog:latest
+  #   container_name: ghost-mailhog
+  #   profiles: [ ghost ]
+  #   ports:
+  #     - "1025:1025" # SMTP server
+  #     - "8025:8025" # Web interface
+  #   restart: always
 volumes:
   mysql-data: {}
   redis-data: {}

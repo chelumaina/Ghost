@@ -9,11 +9,15 @@
         }
     },
     "mail": {
-        "from": "test@example.com",
+        "from": "smtp.hostinger.com",
         "transport": "SMTP",
         "options": {
-            "host": "mailhog",
-            "port": 1025
+            "host": "support@aispeechpro.com",
+            "port": 465,
+            "auth": {
+                "user": "support@aispeechpro.com",
+                "pass": "Chelule@2022"
+            }
         }
     },
     "adapters": {

@@ -14,7 +14,7 @@ export default class PoweredBy extends React.Component {
                 window.open('https://ghost.org', '_blank');
             }}>
                 <GhostLogo />
-                Powered by Ghost
+                Powered by Neuro Hog AI
             </a>
         );
         /* eslint-enable i18next/no-literal-string */

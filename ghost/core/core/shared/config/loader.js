@@ -17,6 +17,8 @@ function loadNconf(options) {
 
     const baseConfigPath = options.baseConfigPath || __dirname;
     const customConfigPath = options.customConfigPath || process.cwd();
+
+    // console.log("customConfigPath", customConfigPath)
     const nconf = new Nconf.Provider();
 
     // ## Load Config
@@ -29,7 +31,9 @@ function loadNconf(options) {
     nconf.env({separator: '__', parseValues: true});
 
     // Now load various config json files
+
     nconf.file('custom-env', path.join(customConfigPath, 'config.' + env + '.json'));
+    console.log("custom-env", path.join(customConfigPath, 'config.' + env + '.json'))
     if (!env.startsWith('testing')) {
         if (process.env.GHOST_DEV_IS_DOCKER === 'true') {
             nconf.file('docker-env', path.join(baseConfigPath, 'env', 'config.development.docker.json'));
@@ -41,9 +45,11 @@ function loadNconf(options) {
         });
     }
     nconf.file('default-env', path.join(baseConfigPath, 'env', 'config.' + env + '.json'));
+    console.log("default-env", path.join(baseConfigPath, 'env','config.' + env + '.json'))
 
     // Finally, we load defaults, if nothing else has a value this will
     nconf.file('defaults', path.join(baseConfigPath, 'defaults.json'));
+    console.log("default", path.join(baseConfigPath,  'defaults.json'))
 
     // ## Config Methods
 

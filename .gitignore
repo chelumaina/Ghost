@@ -180,3 +180,7 @@ temp*.sql
 # Docker Yarn Cache
 .yarncache
 .yarncachecopy
+.yarn-cache
+mysql/mysql-data
+redis/redis-data
+.vscode/

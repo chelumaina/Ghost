@@ -91,15 +91,19 @@ module.exports = class GhostMailer {
         const nodemailer = require('@tryghost/nodemailer');
 
         let transport = config.get('mail') && config.get('mail').transport || 'direct';
+
         transport = transport.toLowerCase();
 
         // nodemailer mutates the options passed to createTransport
         const options = config.get('mail') && _.clone(config.get('mail').options) || {};
-
+        console.log("options:   "+JSON.stringify(options));
+        console.log("transport: "+transport)
         this.state = {
             usingDirect: transport === 'direct',
             usingMailgun: transport === 'mailgun'
         };
+
+        console.log("JSON.stringify(this.state)66666:   "+JSON.stringify(this.state));
         this.transport = nodemailer(transport, options);
     }
 
