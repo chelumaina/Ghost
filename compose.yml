@@ -72,7 +72,7 @@ services:
     entrypoint: [ "/home/ghost/.docker/development.entrypoint.sh" ]
     command: [ "yarn", "dev" ]
     ports:
-      - "2368:2368" # Ghost
+      - "2369:2368" # Ghost
       - "4200:4200" # Admin
       - "4201:4201" # Admin tests
       - "4175:4175" # Portal
@@ -83,6 +83,8 @@ services:
       - "7173:7173" # Comments
       - "7174:7174" # Comments HTTPS
     profiles: [ ghost ]
+    expose:
+      - 2368
     tty: true
     depends_on:
       mysql:
