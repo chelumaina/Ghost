@@ -100,7 +100,7 @@ services:
     ports:
       - 3306:3306
     env_file:
-      -.env
+      - .env
     environment:
       MYSQL_ROOT_PASSWORD: ${database__connection__password-}
       MYSQL_DATABASE: ${database__connection__database-}
@@ -120,15 +120,15 @@ services:
     container_name: ghost-redis
     hostname: ghost-redis
     env_file:
-      -.env
+      - .env
     ports:
       - 6379:6379
     restart: always
     command: [
       "redis-server",
-      "--requirepass", "${cache__options__password-}", 
-      "--masteruser", "scriber", 
-      "--masterauth", "${cache__options__password-}" 
+      "--requirepass", "${cache__options__password-}",
+      "--masteruser", "scriber",
+      "--masterauth", "${cache__options__password-}"
     ]
     environment:
       - REDIS_USER="scriber"
