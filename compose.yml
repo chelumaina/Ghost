@@ -49,8 +49,8 @@ x-service-template: &service-template
 
     # Email config (example: Mailgun)
     - mail__transport=SMTP
-    - mail__options__host=${url:-}
-    - mail__options__port=${url:-}
+    - mail__options__host=${mail__options__host:-}
+    - mail__options__port=${mail__options__port:-}
     - mail__options__secure=true
     - mail__options__service=Direct
     - mail__options__auth__user=${mail__options__auth__user:-}
@@ -107,7 +107,7 @@ services:
     restart: always
     volumes:
       - ./.docker/mysql-preload:/docker-entrypoint-initdb.d
-      - ./mysql/mysql-data:/var/lib/mysql
+      - ./mysql_data/mysql-data:/var/lib/mysql
     healthcheck:
       test: mysql -uroot -p${database__connection__password-wrong} ${database__connection__database-gh} -e 'select 1'
       interval: 1s
