@@ -184,3 +184,4 @@ temp*.sql
 mysql/mysql-data
 redis/redis-data
 .vscode/
+mysql_data
