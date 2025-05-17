@@ -65,6 +65,8 @@ x-service-template: &service-template
 services:
   ghost:
     <<: *service-template
+    container_name: ghost_app_prod
+    hostname: ghost_app_prod
     build:
       context: .
       dockerfile: ./.docker/Dockerfile
